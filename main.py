@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 app = Flask(__name__)
 
 import pymongo
+import quiz
+import sys
 
 conn = pymongo.MongoClient()    # connect to localhost
 
@@ -13,14 +15,17 @@ statisticsCollection = db['statistics']
 # quiz
 # statistics
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/quiz')
-def quiz():
-    return render_template('quiz.html')
+@app.route('/quiz', methods = ['POST','GET'])
+def doQuiz():
+    quizdata = request.form
+    questions = quiz.createQuiz(quizdata)
+    print(quizdata,file=sys.stderr)
+    currentQuestion = questions[int(quizdata.get("questionNumber"))]
+    return render_template('quiz.html',quizdata = quizdata, question = currentQuestion)
 
 @app.route('/statistics')
 def statistics():
