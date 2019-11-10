@@ -1,1 +1,10 @@
+<!doctype html>
+<body>
 <h1>Quiz - TODO</h1>
+<form action="/quiz" method="POST">
+    {% for value in question.answers %}
+    <input type="radio" name="answer" value="{{value}}">{{value}}</input><br>
+    {% endfor %}
+    <p><input type="submit" value="Next"/></p>
+</form>
+</body>
