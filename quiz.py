@@ -20,15 +20,14 @@ statisticsCollection = db['statistics']
 
 # questionData : [questionNumber, questionCount]
 def createQuiz(quizdata):
+    global questionData
+    global questionIndex
+
     questionData = [0, int(quizdata["questionCount"])]
-    questionIndex = random.sample(range(0, quizCollection.count()), questionData[1])
+    questionIndex = random.sample(range(0, quizCollection.count() - 1), questionData[1])
     questions = []
     for i in questionIndex:
         question = quizCollection.find_one({"_id": i})
+        random.shuffle(question["answers"])
         questions.append(Question(question["question"], question["answers"]))
     return questions
-
-def showNextQuestion(questionData, questions):
-    questionData[0] = questionData[0] + 1
-    question = questions[questionData[0]]
-    return [questionData, question]
