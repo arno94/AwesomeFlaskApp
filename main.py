@@ -13,6 +13,7 @@ conn = pymongo.MongoClient()    # connect to localhost
 db = conn['quizApp']    # select database
 testCollection = db['quiz']   # select collection
 statisticsCollection = db['statistics']
+usersCollection = db['users']
 # quiz
 # statistics
 
@@ -30,6 +31,27 @@ def initData():
     questionIndex = -1
 
 @app.route('/', methods = ['POST','GET'])
+def login():
+    return render_template('login.html')
+
+@app.route('/login', methods = ['POST'])
+def doLogin():
+    name = request.form.get('username')
+    password = request.form.get ('password')
+    user = {'username': (name), 'password': password }
+    if usersCollection.find_one(user):
+        return render_template('index.html')
+    return render_template('login.html')
+
+@app.route('/register', methods = ['POST'])
+def doRegister():
+    name = request.form.get('username')
+    password = request.form.get ('password')
+    user = {'username': (name), 'password': password }
+    usersCollection.insert_one(user)
+    #return render_templae('index.html')
+    return redirect(url_for('index'))
+
 @app.route('/index', methods = ['POST','GET'])
 def index():
     initData()

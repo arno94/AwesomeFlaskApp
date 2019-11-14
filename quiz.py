@@ -24,7 +24,7 @@ def createQuiz(quizdata):
     global questionIndex
 
     questionData = [0, int(quizdata["questionCount"])]
-    questionIndex = random.sample(range(0, quizCollection.count() - 1), questionData[1])
+    questionIndex = random.sample(range(0, quizCollection.count()), questionData[1])
     questions = []
     for i in questionIndex:
         question = quizCollection.find_one({"_id": i})
