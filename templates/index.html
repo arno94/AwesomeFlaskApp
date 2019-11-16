@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <h1>QUIZZ</h1>
+<form action="/logout" method="POST">
+    <p>Hello, {{session["user_name"]}}</p>
+    <p><input type="submit" value="Logout"/></p>
+</form>
 <form action="/quiz" method="POST">
     Number of questions:
     <select name="questionCount">

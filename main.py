@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 from flask import Flask, render_template, request
-from flask import redirect, url_for
+from flask import redirect, url_for, session
+import os
 app = Flask(__name__)
 
 import pymongo
@@ -32,7 +33,10 @@ def initData():
 
 @app.route('/', methods = ['POST','GET'])
 def login():
-    return render_template('login.html')
+    if not session.get("logged_in"):
+        return render_template('login.html')
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/login', methods = ['POST'])
 def doLogin():
@@ -40,6 +44,8 @@ def doLogin():
     password = request.form.get ('password')
     user = {'username': (name), 'password': password }
     if usersCollection.find_one(user):
+        session["logged_in"]=True
+        session["user_name"] = name
         return render_template('index.html')
     return render_template('login.html')
 
@@ -49,19 +55,28 @@ def doRegister():
     password = request.form.get ('password')
     user = {'username': (name), 'password': password }
     usersCollection.insert_one(user)
-    #return render_templae('index.html')
+    session['logged_in'] = True
     return redirect(url_for('index'))
 
 @app.route('/index', methods = ['POST','GET'])
 def index():
+    if not session.get("logged_in"):
+        return render_template('login.html')
     initData()
 
     return render_template('index.html')
+
+@app.route('/logout', methods = ['POST'])
+def logout():
+    session['logged_in'] = False
+    return redirect(url_for('login'))
 
 #print(questionCount,file=sys.stderr)
 
 @app.route('/quiz', methods = ['POST','GET'])
 def doQuiz():
+    if not session.get("logged_in"):
+        return render_template('login.html')
     global quizdata
     global questions
     global questionIndex
@@ -90,5 +105,6 @@ def statistics():
     return render_template('statistics.html')
 
 if __name__ == "__main__":
+    app.secret_key = os.urandom(12)
     app.run(debug=True)    # listen on localhost ONLY
 #    app.run(debug=True, host='0.0.0.0')    # listen on all public IPs
