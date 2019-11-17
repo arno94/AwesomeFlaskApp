@@ -1,21 +1,36 @@
 <!DOCTYPE html>
 <html>
-<h1>QUIZZ</h1>
-<form action="/logout" method="POST">
-    <p>Hello, {{session["user_name"]}}</p>
-    <p><input type="submit" value="Logout"/></p>
-</form>
-<form action="/quiz" method="POST">
-    Number of questions:
-    <select name="questionCount">
-        <option value="5">5</option>
-        <option value="10">10</option>
-    </select>
-    <input type="hidden" name="questionNumber" value="-1" type="text"/>
+<head>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/index.css')}}">
+</head>
+<div>
+    <div class="card left">
+        <div class="container">
+            <form action="/quiz" method="POST">
+                <h3>Start a new quiz</h3>
+                Select the number of questions:
+                <select name="questionCount">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                </select>
+                <input type="hidden" name="questionNumber" value="-1" type="text"/>  
 
-  
+                <p><input type="submit" value="START"/></p>
+            </form>
+        </div>
+        
+    </div>
 
-    <p><input type="submit" value="START"/></p>
-</form>
-
+    <div class="card right">
+        <div class="container">
+            <form action="/logout" method="POST">
+                <h3> Profile</h3>
+                <p>Username: {{session["user_name"]}}</p>
+                <p>Solved quiz: </p>
+                <p>Average score percent: </p>
+                <p><input type="submit" value="Logout"/></p>
+            </form>
+        </div>
+    </div>
+</div>
 </html>
