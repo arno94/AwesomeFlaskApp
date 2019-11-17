@@ -4,7 +4,6 @@
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/style.css')}}">
 </head>
 <body>
-
     <div id="login-box">
       <div class="left-box">
 	<form action="/register" method="POST">
@@ -16,6 +15,9 @@
           <input type="password" name="password2" placeholder="Retype password"/>
         
           <input type="submit" name="signup-button" value="Sign Up"/>
+	  {% if error_reg %}
+              <p class=error><strong>Error:</strong> {{ error_reg }}
+          {% endif %}
       </form>  
         </div>
         <form action="/login" method="POST">
@@ -26,7 +28,9 @@
           <input type="password" name="password" placeholder="Password"/>
         
           <input type="submit" name="signup-button" value="Sign In"/>
-        
+          {% if error_log %}
+              <p class=error><strong>Error:</strong> {{ error_log }}
+          {% endif %}
         </div>
 	</form>
         <div class="or">OR</div>

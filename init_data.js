@@ -9,7 +9,8 @@ db.quiz.insertOne({"_id": 0,
       "2",
       "3",
       "11"
-    ]
+    ],
+   "correct_answer": "2"
 });
 db.quiz.insertOne({"_id": 1,
   "question": "2+2?",
@@ -18,7 +19,8 @@ db.quiz.insertOne({"_id": 1,
       "2",
       "3",
       "11"
-    ]
+    ],
+   "correct_answer": "2"
 });
 db.quiz.insertOne({"_id": 2,
   "question": "3+3?",
@@ -27,7 +29,8 @@ db.quiz.insertOne({"_id": 2,
       "2",
       "3",
       "11"
-    ]
+    ],
+   "correct_answer": "2"
 });
 db.quiz.insertOne({"_id": 3,
   "question": "4+4?",
@@ -36,7 +39,8 @@ db.quiz.insertOne({"_id": 3,
       "2",
       "3",
       "11"
-    ]
+    ],
+   "correct_answer": "2"
 });
 db.quiz.insertOne({"_id": 4,
   "question": "5+5?",
@@ -45,7 +49,8 @@ db.quiz.insertOne({"_id": 4,
       "2",
       "3",
       "11"
-    ]
+    ],
+   "correct_answer": "2"
 });
 db.quiz.insertOne({"_id": 5,
   "question": "6+6?",
@@ -54,5 +59,6 @@ db.quiz.insertOne({"_id": 5,
       "2",
       "3",
       "11"
-    ]
+    ],
+   "correct_answer": "2"
 });

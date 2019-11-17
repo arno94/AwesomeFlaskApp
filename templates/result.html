@@ -1,4 +1,13 @@
-<h1>Statistics - TODO</h1>
+<h1>Result</h1>
+
+<table>
+    {% for value in answers %}
+        <tr>
+        <th name="answer" value="{{value}}">{{value}}</th>
+        </tr>
+    {% endfor %}
+</table>
+
 <form action="/index" method="GET">
 <p><input type="submit" value="Back to start"/></p>
 </form>

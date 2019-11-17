@@ -29,5 +29,5 @@ def createQuiz(quizdata):
     for i in questionIndex:
         question = quizCollection.find_one({"_id": i})
         random.shuffle(question["answers"])
-        questions.append(Question(question["question"], question["answers"]))
+        questions.append(Question(question["question"], question["answers"], question["correct_answer"]))
     return questions

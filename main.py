@@ -21,6 +21,7 @@ usersCollection = db['users']
 quizdata = 0
 questions = []
 questionIndex = -1
+answers = []
 
 def initData():
     global quizdata
@@ -47,13 +48,17 @@ def doLogin():
         session["logged_in"]=True
         session["user_name"] = name
         return render_template('index.html')
-    return render_template('login.html')
+    error="Wrong username or password."
+    return render_template('login.html',error_log=error)
 
 @app.route('/register', methods = ['POST'])
 def doRegister():
     name = request.form.get('username')
     password = request.form.get ('password')
-    user = {'username': (name), 'password': password }
+    user = {'username': name, 'password': password }
+    if usersCollection.find({'username': name}).count() > 0:
+        error='Username already in use'
+        return render_template('login.html',error_reg=error)
     usersCollection.insert_one(user)
     session['logged_in'] = True
     return redirect(url_for('index'))
@@ -87,6 +92,11 @@ def doQuiz():
             'questionNumber': int(request.form.get('questionNumber'))
         }
         questions = quiz.createQuiz(quizdata)
+    else:
+        questionNumber = int(quizdata.get("questionNumber"))
+        currentQuestion = questions[questionNumber]
+        myAnswer = request.form.get('answer')
+        answers.append(myAnswer == currentQuestion.correct_answer)
 
     questionNumber = int(quizdata.get("questionNumber")) + 1
     if(questionNumber >=  int(quizdata.get("questionCount"))):
@@ -98,7 +108,8 @@ def doQuiz():
 
 @app.route('/result')
 def result():
-    return render_template('result.html')
+    
+    return render_template('result.html', answers = answers)
 
 @app.route('/statistics')
 def statistics():
