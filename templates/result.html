@@ -1,12 +1,15 @@
-<h1>Result</h1>
+<!Doctype html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/result.css')}}">
+</head>
 
-<table>
-    {% for value in answers %}
-        <tr>
-        <th name="answer" value="{{value}}">{{value}}</th>
-        </tr>
-    {% endfor %}
-</table>
+<h1>Result</h1>
+<div class = "container">
+<div class = "card">
+<h1> A teszten elért pontjaid száma: </h1>
+<h1 name="points" value="{{points}}"> {{points}} </h1>
+</div>
+</div>
 
 <form action="/index" method="GET">
 <p><input type="submit" value="Back to start"/></p>

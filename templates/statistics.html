@@ -1,1 +1,16 @@
-<h1>Statistics - TODO</h1>
+<!Doctype html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/statistics.css')}}">
+</head>
+
+<h1>STATISTICS:</h1>
+<div class = "container">
+<div class = "card">
+
+<p>Average score percent: {{session["avg_score_percent"]}} %</p>
+</div>
+</div>
+
+<form action="/index" method="GET">
+<p><input type="submit" value="Back to start"/></p>
+</form>

@@ -1,11 +1,22 @@
-<!doctype html>
+<!Doctype html>
+<head>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styles/quiz.css')}}">
+</head>
 <body>
 <h1>Quiz</h1>
-<form action="/quiz" method="POST">
-    <p>{{quizdata["questionNumber"] + 1}}. question</p>
+
+<div class="card">
+<div class="container">
+	<form action="/quiz" method="POST">
+    <h2>{{quizdata["questionNumber"] + 1}}. question: {{question.question}}</h2>
     {% for value in question.answers %}
-    <input type="radio" name="answer" value="{{value}}">{{value}}</input><br>
+    <label class="container">{{value}}
+  <input type="radio"  name="answer" value={{value}} required/>
+  <span class="checkmark"></span>
+</label>
     {% endfor %}
-    <p><input type="submit" value="Next"/></p>
+</div>
+<p><input type="submit" value="Next"/></p>
 </form>
+</div>
 </body>

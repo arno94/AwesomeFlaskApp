@@ -3,25 +3,28 @@
 from flask import Flask, render_template, request
 from flask import redirect, url_for, session
 import os
+from werkzeug.security import check_password_hash, generate_password_hash
+
 app = Flask(__name__)
 
 import pymongo
 import quiz
 import sys
 
-conn = pymongo.MongoClient()    # connect to localhost
+conn = pymongo.MongoClient() 
 
-db = conn['quizApp']    # select database
-testCollection = db['quiz']   # select collection
-statisticsCollection = db['statistics']
+db = conn['quizApp'] 
+testCollection = db['quiz'] 
 usersCollection = db['users']
-# quiz
-# statistics
+pointsCollection = db['points']
 
 quizdata = 0
 questions = []
 questionIndex = -1
 answers = []
+solved_quiz = 0
+avg_score_percent = 0
+rank = 0
 
 def initData():
     global quizdata
@@ -41,13 +44,23 @@ def login():
 
 @app.route('/login', methods = ['POST'])
 def doLogin():
-    name = request.form.get('username')
-    password = request.form.get ('password')
-    user = {'username': (name), 'password': password }
-    if usersCollection.find_one(user):
+    error = None
+    name = request.form['username']
+    password = request.form['password']
+    user = usersCollection.find_one({'username': request.form['username']})
+
+    if user is None:
+        error = 'Incorrect username.'
+    elif not check_password_hash(user['password'], password):
+        error = 'Incorrect password.'
+
+    if error is None:
+        session.clear()
+        session['user_name'] = user['username']
         session["logged_in"]=True
-        session["user_name"] = name
+
         return render_template('index.html')
+
     error="Wrong username or password."
     return render_template('login.html',error_log=error)
 
@@ -55,20 +68,31 @@ def doLogin():
 def doRegister():
     name = request.form.get('username')
     password = request.form.get ('password')
-    user = {'username': name, 'password': password }
+    password_hash = generate_password_hash(password)
+    user = {'username': name, 'password': password_hash }
     if usersCollection.find({'username': name}).count() > 0:
         error='Username already in use'
         return render_template('login.html',error_reg=error)
     usersCollection.insert_one(user)
     session['logged_in'] = True
+    session["user_name"] = name
     return redirect(url_for('index'))
+
+@app.route('/delete_user', methods=['POST'])
+def delete_user():
+    if request.method == 'POST':
+        usersCollection.delete_one({"username" : session["user_name"]})
+        pointsCollection.delete_one({"username" : session["user_name"]})
+        statisticsCollection.delete_one({"username" : session["user_name"]})
+        session.clear()
+        return redirect(url_for('index'))
 
 @app.route('/index', methods = ['POST','GET'])
 def index():
     if not session.get("logged_in"):
         return render_template('login.html')
     initData()
-
+    
     return render_template('index.html')
 
 @app.route('/logout', methods = ['POST'])
@@ -108,10 +132,34 @@ def doQuiz():
 
 @app.route('/result')
 def result():
-    
-    return render_template('result.html', answers = answers)
+    points = sum(answers)
 
-@app.route('/statistics')
+    solved_quiz = pointsCollection.find({"username" : session["user_name"]}).count() + 1
+    session["solved_quiz"] = solved_quiz
+    
+    name = session["user_name"]
+
+    test = {'username': name, 'points': points,'questionNumber': int(quizdata.get("questionNumber"))+1 }
+    pointsCollection.insert_one(test)
+    answers.clear()
+
+    pontok_osszege = 0
+    pontok = pointsCollection.find({"username": session["user_name"]},{"_id":0,"points":1})
+    for doc in pontok:
+        pontok_osszege = pontok_osszege + doc["points"]
+    
+    kerdesek_osszege = 0
+    kerdesek = pointsCollection.find({"username": session["user_name"]},{"_id":0,"questionNumber":1})
+    for doc in kerdesek:
+        kerdesek_osszege = kerdesek_osszege + doc["questionNumber"]
+        
+    avg_score_percent = (pontok_osszege / kerdesek_osszege) * 100
+    avg_score_percent = round(avg_score_percent,2) 
+    session["avg_score_percent"] = avg_score_percent
+
+    return render_template('result.html', answers = answers, points = points)
+
+@app.route('/statistics',methods = ['POST'])
 def statistics():
     return render_template('statistics.html')
 

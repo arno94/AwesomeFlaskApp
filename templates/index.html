@@ -15,7 +15,8 @@
                 </select>
                 <input type="hidden" name="questionNumber" value="-1" type="text"/>  
 
-                <p><input type="submit" value="START"/></p>
+                <p><button type="submit2">START</button></p>
+          
             </form>
         </div>
         
@@ -23,14 +24,31 @@
 
     <div class="card right">
         <div class="container">
-            <form action="/logout" method="POST">
-                <h3> Profile</h3>
+            
+                <h3>Profile</h3>
                 <p>Username: {{session["user_name"]}}</p>
-                <p>Solved quiz: </p>
-                <p>Average score percent: </p>
-                <p><input type="submit" value="Logout"/></p>
-            </form>
+                <p>Solved quiz: {{session["solved_quiz"]}} </p>
+                <p>Average score percent: {{session["avg_score_percent"]}} %</p>
+                <p>RANK: {{session["rank"]}}</p>
+             <li>  
+            <form method="POST" action="{{ url_for('statistics') }}">
+                  <button type="submit3">Statistics</button>
+                  </form>
+             </li>
+           <form action="/logout" method="POST">
+                <li>
+            <input type="submit" value="Logout"/>
+                </li>
+             </form>
+            <li>  
+            <form method=POST onsubmit="return confirm('Delete your account?')"              
+                         action="{{ url_for('delete_user') }}">
+                  <button type="submit">Delete account</button>
+                </form>
+             </li>
         </div>
-    </div>
+    </div>           
 </div>
+
+
 </html>

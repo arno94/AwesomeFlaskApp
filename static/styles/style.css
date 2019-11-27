@@ -2,9 +2,9 @@ body
 {
     margin: 0;
     padding: 0;
-    background: #efefef;
+    background: white;
     font-size: 16px;
-    color: #777;
+    color: #191970;
     font-family: sans-serif;
     font-weight: 300;
 }
@@ -27,7 +27,10 @@ body
     box-sizing: border-box;
     padding: 40px;
     width: 300px;
-    height: 400px;    
+    height: 400px;   
+    background-image: url(image1.jpg);
+    background-size: cover;
+    background-position: center; 
 }
 
 h1
@@ -60,7 +63,7 @@ input[type="submit"]
     margin-bottom: 28px;
     width: 120px;
     height: 32px;
-    background: #f44336;
+    background: #696969;
     border: none;
     border-radius: 2px;
     color: #fff;
@@ -75,8 +78,8 @@ input[type="submit"]
 input[type="submit"]:hover,
 input[type="submit"]:focus
 {
-    background: #ff5722;
-    transition: 0.2s ease;
+    background: #C0C0C0;
+    transition: 0.5s ease;
 }
 
 .right-box
@@ -88,7 +91,7 @@ input[type="submit"]:focus
     padding: 40px;
     width: 300px;
     height: 400px;
-    background-image: url(image1.jpg);
+    background-image: url(image.jpg);
     background-size: cover;
     background-position: center;
 }
@@ -106,45 +109,10 @@ input[type="submit"]:focus
     line-height: 40px;
     text-align: center;
 }
-
-.right-box .signinwith
+.w3-allerta 
 {
-    display: block;
-    margin-bottom: 40px;
-    font-size: 28px;
-    color: #fff;
-    text-align: center;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  font-family: "Allerta Stencil", Sans-serif;
 }
-
-
-button.social
-{
-    margin-bottom: 20px;
-    width: 220px;
-    height: 36px;
-    border: none;
-    border-radius: 2px;
-    color: #fff;
-    font-family: sans-serif;
-    font-weight: 500;
-    transition: 0.2s ease;
-    cursor: pointer;
-}
-
-.facebook
-{
-    background: #32508e;
-}
-.twitter
-{
-    background: #55acee;
-}
-.google
-{
-    background: #dd4b39;
-}
-
 
 
 
