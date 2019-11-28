@@ -1,18 +1,30 @@
 #!/usr/bin/env python3
 
+<<<<<<< Updated upstream
 from flask import Flask, render_template, request
 from flask import redirect, url_for, session
 import os
+=======
+from flask import Flask, render_template, request, redirect, url_for, session
+>>>>>>> Stashed changes
 from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
 
+import os
 import pymongo
 import quiz
 import sys
 
+<<<<<<< Updated upstream
 conn = pymongo.MongoClient() 
 
+=======
+import pointsDao
+
+conn = pymongo.MongoClient() 
+
+>>>>>>> Stashed changes
 db = conn['quizApp'] 
 testCollection = db['quiz'] 
 usersCollection = db['users']
@@ -22,18 +34,24 @@ quizdata = 0
 questions = []
 questionIndex = -1
 answers = []
+<<<<<<< Updated upstream
 solved_quiz = 0
 avg_score_percent = 0
 rank = 0
+=======
+avg_score_percent = 0
+>>>>>>> Stashed changes
 
 def initData():
     global quizdata
     global questions
     global questionIndex
 
-    quizdata = 0
-    questions = []
-    questionIndex = -1
+    [quizdata, questions, questionIndex] = quiz.initData()
+    stat = initStatistics()
+    getRank(stat)
+    getSolvedQuiz()
+    updateAvg_score_percent()
 
 @app.route('/', methods = ['POST','GET'])
 def login():
@@ -59,7 +77,12 @@ def doLogin():
         session['user_name'] = user['username']
         session["logged_in"]=True
 
+<<<<<<< Updated upstream
         return render_template('index.html')
+=======
+        #return render_template('index.html')
+        return redirect(url_for('index'))
+>>>>>>> Stashed changes
 
     error="Wrong username or password."
     return render_template('login.html',error_log=error)
@@ -132,6 +155,7 @@ def doQuiz():
 
 @app.route('/result')
 def result():
+<<<<<<< Updated upstream
     points = sum(answers)
 
     solved_quiz = pointsCollection.find({"username" : session["user_name"]}).count() + 1
@@ -160,8 +184,63 @@ def result():
     return render_template('result.html', answers = answers, points = points)
 
 @app.route('/statistics',methods = ['POST'])
+=======
+    getSolvedQuiz()
+
+    points = sum(answers)
+    saveQuiz(points)
+
+    updateAvg_score_percent()
+
+    return render_template('result.html', answers = answers, points = points)
+
+@app.route('/statistics',methods = ['GET'])
+>>>>>>> Stashed changes
 def statistics():
-    return render_template('statistics.html')
+    stat = initStatistics()
+    getRank(stat)
+    return render_template('statistics.html', stat = stat)
+
+def updateAvg_score_percent():
+    avg_score_percent = pointsDao.getAvgScorePercent(session["user_name"])
+    session["avg_score_percent"] = avg_score_percent
+
+def saveQuiz(points):    
+    name = session["user_name"]
+    test = {'username': name, 'points': points,'questionNumber': int(quizdata.get("questionNumber"))+1 }
+    pointsCollection.insert_one(test)
+    answers.clear()
+    return points
+
+def getSolvedQuiz():
+    global solved_quiz
+    solved_quiz = pointsCollection.find({"username" : session["user_name"]}).count()
+    session["solved_quiz"] = solved_quiz
+
+def initStatistics():
+    global ranking
+    ranking = 1
+    lista = pointsCollection.find({},{"_id":0,"username": 1}).distinct("username")
+    stat = []
+    for doc in lista:
+        pontok_osszege = 0
+        kerdesek_osszege = 0
+        pontok = pointsCollection.find({"username": doc},{"_id":0,"points":1,"questionNumber": 1})
+        for p in pontok:
+            pontok_osszege = pontok_osszege + p["points"]
+            kerdesek_osszege = kerdesek_osszege + p["questionNumber"]
+            avg_score_percent = (pontok_osszege / kerdesek_osszege) * 100
+            avg_score_percent = round(avg_score_percent,2) 
+        stat.append({"name": doc, "points": pontok_osszege, "questionNumber": kerdesek_osszege, "avg": avg_score_percent})
+    return sorted(stat, key = lambda i: (i['points'],i['avg']),reverse=True)
+
+def getRank(stat):
+    global ranking
+    for k in stat:
+        if session["user_name"] == k["name"]:
+            break
+        ranking = ranking + 1
+    session['ranking'] = ranking
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)

@@ -7,9 +7,6 @@ from flask import redirect
 
 from models.question import Question
 
-#print to console
-# print(questionCount,file=sys.stderr)
-
 conn = pymongo.MongoClient()    # connect to localhost
 
 db = conn['quizApp']    # select database
@@ -17,6 +14,12 @@ quizCollection = db['quiz']   # select collection
 statisticsCollection = db['statistics']
 
 # quiz
+
+def initData():
+    quizdata = 0
+    questions = []
+    questionIndex = -1
+    return [quizdata, questions, questionIndex]
 
 # questionData : [questionNumber, questionCount]
 def createQuiz(quizdata):

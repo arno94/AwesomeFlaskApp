@@ -29,9 +29,15 @@
                 <p>Username: {{session["user_name"]}}</p>
                 <p>Solved quiz: {{session["solved_quiz"]}} </p>
                 <p>Average score percent: {{session["avg_score_percent"]}} %</p>
+<<<<<<< Updated upstream
                 <p>RANK: {{session["rank"]}}</p>
              <li>  
             <form method="POST" action="{{ url_for('statistics') }}">
+=======
+                <p>RANK: {{session["ranking"]}}</p>
+             <li>  
+            <form method="GET" action="{{ url_for('statistics') }}">
+>>>>>>> Stashed changes
                   <button type="submit3">Statistics</button>
                   </form>
              </li>

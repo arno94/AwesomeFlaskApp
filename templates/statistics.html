@@ -7,7 +7,17 @@
 <div class = "container">
 <div class = "card">
 
+<<<<<<< Updated upstream
 <p>Average score percent: {{session["avg_score_percent"]}} %</p>
+=======
+{% for value in stat %}
+<div>Név: {{value["name"]}}</div>
+<div>Kérdések száma: {{value["questionNumber"]}}</div>
+<div>Helyes válaszok száma: {{value["points"]}}</div>
+<div>Arány: {{value["avg"]}} %</div>
+<br>
+{% endfor %}
+>>>>>>> Stashed changes
 </div>
 </div>
 
